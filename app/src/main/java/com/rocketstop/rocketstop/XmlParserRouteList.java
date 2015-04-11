@@ -85,7 +85,6 @@ public class XmlParserRouteList
         return tag;
     }
 
-
     // For the tags "tag" and "title", extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
