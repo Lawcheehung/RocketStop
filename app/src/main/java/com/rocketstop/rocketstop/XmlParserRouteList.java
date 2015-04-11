@@ -69,7 +69,32 @@ public class XmlParserRouteList
         return routes;
     }
 
+    // Processes "tag" tags in the feed.
+    private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "tag");
+        String tag = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "tag");
+        return tag;
+    }
 
+    // Processes "title" tags in the feed.
+    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "title");
+        String tag = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "title");
+        return tag;
+    }
+
+
+    // For the tags "tag" and "title", extracts their text values.
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String result = "";
+        if (parser.next() == XmlPullParser.TEXT) {
+            result = parser.getText();
+            parser.nextTag();
+        }
+        return result;
+    }
 
     //Skip tags we don't care about
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
