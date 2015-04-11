@@ -58,11 +58,13 @@ public class XmlParserRouteList
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the entry tag
+            // Starts by looking for the route tag
             if (name.equals("route")) {
-                //routes.add(readBody(parser));
+                //routes.add(readTag(parser));
                 skip(parser);
-            } else {
+            } else if (name.equals("title")) {
+                //routes.add(readTitle(parser));
+            } else  {
                 skip(parser);
             }
         }
