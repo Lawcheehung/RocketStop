@@ -18,8 +18,4 @@ public class XmlParserRouteList
             this.routeName = routeName;
         }
     }
-
-    //live 4;22pm
-    //live 4:16pm
-    //test change
 }
