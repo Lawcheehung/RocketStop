@@ -48,8 +48,7 @@ public class XmlParserRouteList
 
     //Adapted from http://developer.android.com/training/basics/network-ops/xml.html
     //Processes the feed
-    private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List entries = new ArrayList();
+    private List<Route> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         //Under construction...
         List<Route> routes = new ArrayList<Route>();
 
@@ -66,6 +65,6 @@ public class XmlParserRouteList
                 //skip(parser);
             }
         }
-        return entries;
+        return routes;
     }
 }
