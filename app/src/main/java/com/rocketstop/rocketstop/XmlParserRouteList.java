@@ -17,7 +17,8 @@ public class XmlParserRouteList
 {
     private static final String ns = null; //No namespaces
 
-    //A Route object consists of a routeNumber & routeName, i.e. routeNumber = 5, routeName = 5-Avenue Rd
+    //A Route object consists of a routeNumber & routeName
+    //i.e. routeNumber = 5, routeName = 5-Avenue Rd
     public static class Route
     {
         public final String routeNumber;
