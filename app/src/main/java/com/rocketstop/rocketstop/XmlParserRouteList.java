@@ -52,19 +52,40 @@ public class XmlParserRouteList
         //Under construction...
         List<Route> routes = new ArrayList<Route>();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
+        parser.require(XmlPullParser.START_TAG, ns, "body");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             // Starts by looking for the entry tag
-            if (name.equals("entry")) {
-                //entries.add(readEntry(parser));
+            if (name.equals("route")) {
+                //routes.add(readBody(parser));
+                skip(parser);
             } else {
-                //skip(parser);
+                skip(parser);
             }
         }
         return routes;
+    }
+
+
+
+    //Skip tags we don't care about
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        int depth = 1;
+        while (depth != 0) {
+            switch (parser.next()) {
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
+            }
+        }
     }
 }
