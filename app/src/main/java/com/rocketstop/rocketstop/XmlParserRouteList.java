@@ -51,6 +51,8 @@ public class XmlParserRouteList
     private List<Route> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         //Under construction...
         List<Route> routes = new ArrayList<Route>();
+        String tag = null;
+        String title = null;
 
         parser.require(XmlPullParser.START_TAG, ns, "body");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -60,13 +62,15 @@ public class XmlParserRouteList
             String name = parser.getName();
             // Starts by looking for the route tag
             if (name.equals("route")) {
-                //routes.add(readTag(parser));
+                tag = readTag(parser);
+                title = readTitle(parser);
                 skip(parser);
-            } else if (name.equals("title")) {
-                //routes.add(readTitle(parser));
             } else  {
                 skip(parser);
             }
+
+            Route route = new Route(tag, title);
+            routes.add(route);
         }
         return routes;
     }
