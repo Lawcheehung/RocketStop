@@ -31,27 +31,27 @@ public class XmlParserRouteList
     }
 
     //Return a List containing our Route objects
+    //Adapted from http://developer.android.com/training/basics/network-ops/xml.html
     public List<Route> routeParser(InputStream in) throws XmlPullParserException, IOException
     {
-        //Under construction...
-        List<Route> routes = new ArrayList<Route>();
-
         try
         {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readFeed(parser);
+            return readFeed(parser); //Call readFeed to do processing
         } finally {
             in.close();
         }
     }
 
     //Adapted from http://developer.android.com/training/basics/network-ops/xml.html
-    //Processed the feed
+    //Processes the feed
     private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         List entries = new ArrayList();
+        //Under construction...
+        List<Route> routes = new ArrayList<Route>();
 
         parser.require(XmlPullParser.START_TAG, ns, "feed");
         while (parser.next() != XmlPullParser.END_TAG) {
