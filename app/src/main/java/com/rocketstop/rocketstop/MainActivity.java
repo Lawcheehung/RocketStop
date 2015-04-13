@@ -43,7 +43,7 @@ public class MainActivity extends ActionBarActivity
                         URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
                         URLConnection urlConnection = url.openConnection();
                         input = new BufferedInputStream(urlConnection.getInputStream());
-                        List<XmlParserRouteList.Route> routesList = new ArrayList<>();
+                        List<XmlParserRouteList.Route> routesList;
 
 
                         routesList=abc.routeParser(input);
