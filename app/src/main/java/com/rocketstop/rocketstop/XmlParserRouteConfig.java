@@ -90,7 +90,7 @@ public class XmlParserRouteConfig
 
             if (name.equals("direction") && getAllStops == true)
             {
-                //
+                //create
                 //I'll do this part later.
                 Directions d = new Directions(directionTag, dTitle, dName, useForUI, branch);
                 dir.add(d);
