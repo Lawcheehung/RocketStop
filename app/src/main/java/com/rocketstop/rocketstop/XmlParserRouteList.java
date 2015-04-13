@@ -106,10 +106,10 @@ public class XmlParserRouteList
         parser.require(XmlPullParser.END_TAG, ns, "title");
         return tag;
     }
-
+/////////////////////////////////////////////////////////////////////
     // For the tags "tag" and "title", extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
-    {
+    { System.out.println("I'm going to read text");
         String result = "";
         if (parser.next() == XmlPullParser.TEXT)
         {
