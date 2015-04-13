@@ -67,10 +67,10 @@ public class XmlParserRouteList
             String name = parser.getName();
             // Starts by looking for the route tag
             if (name.equals("route"))
-            {   System.out.println("going to read tag number");
+            {   System.out.println("going to read the tag number");
                 tag = readTag(parser);
                 System.out.println("the tag number is: "+tag);
-                System.out.println("going to read title");
+                System.out.println("going to read the title");
                 title = readTitle(parser);
                 System.out.println("the title is: "+title);
                 skip(parser);
@@ -90,7 +90,9 @@ public class XmlParserRouteList
     private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException
     {
         parser.require(XmlPullParser.START_TAG, ns, "tag");
+        System.out.println("I'm going to read the text");
         String tag = readText(parser);
+        System.out.println("The tag number is!!!!!!!!!:" + tag);
         parser.require(XmlPullParser.END_TAG, ns, "tag");
         return tag;
     }
@@ -103,10 +105,10 @@ public class XmlParserRouteList
         parser.require(XmlPullParser.END_TAG, ns, "title");
         return tag;
     }
-
+/////////////////////////////////////////////////////////////////////
     // For the tags "tag" and "title", extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
-    {
+    { System.out.println("I'm going to read text");
         String result = "";
         if (parser.next() == XmlPullParser.TEXT)
         {
