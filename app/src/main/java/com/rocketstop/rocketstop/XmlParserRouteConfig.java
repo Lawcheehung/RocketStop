@@ -88,7 +88,7 @@ public class XmlParserRouteConfig
                 branch = readBranch(parser);
             }
 
-            if (name.equals("direction") && getAllStops == true)
+            if (name.equals("stop") && getAllStops == true)
             {
                 //create
                 //I'll do this part later.
