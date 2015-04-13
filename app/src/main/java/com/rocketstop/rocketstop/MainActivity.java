@@ -62,9 +62,9 @@ public class MainActivity extends ActionBarActivity
                         System.out.println("The URL is not valid.");
                         System.out.println(e1.getMessage());
                     }
-                    //    catch (XmlPullParserException e)
+                  //      catch (XmlPullParserException e)
                     {
-                        System.out.println("xml error");
+                 //       System.out.println("xml error");
                     }
                 }
                 catch (Exception e)
