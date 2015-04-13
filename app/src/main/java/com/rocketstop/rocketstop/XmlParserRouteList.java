@@ -42,31 +42,42 @@ public class XmlParserRouteList
             parser.setInput(in, null);
             parser.nextTag();
             return readFeed(parser); //Call readFeed to do processing
-        } finally {
+        }
+        finally
+        {
             in.close();
         }
     }
 
     //Adapted from http://developer.android.com/training/basics/network-ops/xml.html
     //Processes the feed
-    private List<Route> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private List<Route> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
+    {
         //Under construction...
         List<Route> routes = new ArrayList<Route>();
         String tag = null;
         String title = null;
 
         parser.require(XmlPullParser.START_TAG, ns, "body");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
+        while (parser.next() != XmlPullParser.END_TAG)
+        {
+            if (parser.getEventType() != XmlPullParser.START_TAG)
+            {
                 continue;
             }
             String name = parser.getName();
             // Starts by looking for the route tag
-            if (name.equals("route")) {
+            if (name.equals("route"))
+            {   System.out.println("going to read tag number");
                 tag = readTag(parser);
+                System.out.println("the tag number is: "+tag);
+                System.out.println("going to read title");
                 title = readTitle(parser);
+                System.out.println("the title is: "+title);
                 skip(parser);
-            } else  {
+            }
+            else
+            {
                 skip(parser);
             }
 
@@ -77,7 +88,8 @@ public class XmlParserRouteList
     }
 
     // Processes "tag" tags in the feed.
-    private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
         parser.require(XmlPullParser.START_TAG, ns, "tag");
         String tag = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "tag");
@@ -85,7 +97,8 @@ public class XmlParserRouteList
     }
 
     // Processes "title" tags in the feed.
-    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
         parser.require(XmlPullParser.START_TAG, ns, "title");
         String tag = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "title");
@@ -93,9 +106,11 @@ public class XmlParserRouteList
     }
 
     // For the tags "tag" and "title", extracts their text values.
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
         String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
+        if (parser.next() == XmlPullParser.TEXT)
+        {
             result = parser.getText();
             parser.nextTag();
         }
@@ -103,13 +118,17 @@ public class XmlParserRouteList
     }
 
     //Skip tags we don't care about
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException
+    {
+        if (parser.getEventType() != XmlPullParser.START_TAG)
+        {
             throw new IllegalStateException();
         }
         int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
+        while (depth != 0)
+        {
+            switch (parser.next())
+            {
                 case XmlPullParser.END_TAG:
                     depth--;
                     break;
