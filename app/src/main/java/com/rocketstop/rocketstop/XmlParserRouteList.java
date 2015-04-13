@@ -101,7 +101,7 @@ public class XmlParserRouteList
 
     // Processes "tag" tags in the feed.
     private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException
-    {
+    {System.out.println("testing");
         parser.require(XmlPullParser.START_TAG, ns, "tag");
         System.out.println("I'm going to read the text");
         String tag = readText(parser);

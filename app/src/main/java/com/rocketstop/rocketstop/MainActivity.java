@@ -16,7 +16,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-//jason's changeg
+//jason's change
 public class MainActivity extends ActionBarActivity
 {
 
