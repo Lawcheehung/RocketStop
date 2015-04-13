@@ -53,8 +53,7 @@ public class XmlParserRouteList
     //Processes the feed
     private List<Route> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
     {
-        //Under construction...
-        List<Route> routes = new ArrayList<Route>();
+        List<Route> routes = new ArrayList<>();
         String tag = null;
         String title = null;
 
