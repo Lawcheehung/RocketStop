@@ -56,6 +56,7 @@ public class XmlParserRouteList
         List<Route> routes = new ArrayList<>();
         String tag = null;
         String title = null;
+        Route route = new Route(tag, title);
 
         parser.require(XmlPullParser.START_TAG, ns, "body");
         while (parser.next() != XmlPullParser.END_TAG)
@@ -67,12 +68,10 @@ public class XmlParserRouteList
             String name = parser.getName();
             // Starts by looking for the route tag
             if (name.equals("route"))
-            {   System.out.println("going to read the tag number");
-                tag = readTag(parser);
-                System.out.println("the tag number is: "+tag);
-                System.out.println("going to read the title");
-                title = readTitle(parser);
-                System.out.println("the title is: "+title);
+            {
+                route = readRoute(parser);
+                //tag = readTag(parser);
+                //title = readTitle(parser);
                 skip(parser);
             }
             else
@@ -80,10 +79,24 @@ public class XmlParserRouteList
                 skip(parser);
             }
 
-            Route route = new Route(tag, title);
             routes.add(route);
         }
         return routes;
+    }
+
+
+    // Processes link tags in the feed.
+    private Route readRoute(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        parser.require(XmlPullParser.START_TAG, ns, "route");
+        String routeTag = "";
+        String routeTitle = "";
+        //String relType = parser.getAttributeValue(null, "tag");
+        routeTag = parser.getText();
+        parser.nextTag();
+        routeTitle = parser.getText();
+        Route route = new Route(routeTag, routeTitle);
+        return route;
     }
 
     // Processes "tag" tags in the feed.
@@ -105,7 +118,7 @@ public class XmlParserRouteList
         parser.require(XmlPullParser.END_TAG, ns, "title");
         return tag;
     }
-/////////////////////////////////////////////////////////////////////
+
     // For the tags "tag" and "title", extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
     { System.out.println("I'm going to read text");
