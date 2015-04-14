@@ -70,9 +70,7 @@ public class XmlParserRouteList
             if (name.equals("route"))
             {
                 route = readRoute(parser);
-                //tag = readTag(parser);
-                //title = readTitle(parser);
-                skip(parser);
+                //skip(parser);
             }
             else
             {
@@ -92,43 +90,12 @@ public class XmlParserRouteList
         String routeTag = "";
         String routeTitle = "";
         //String relType = parser.getAttributeValue(null, "tag");
-        routeTag = parser.getText();
+        routeTag = parser.getAttributeValue(null, "tag");
+        routeTitle = parser.getAttributeValue(null, "title");
         parser.nextTag();
-        routeTitle = parser.getText();
+        //routeTitle = parser.getText();
         Route route = new Route(routeTag, routeTitle);
         return route;
-    }
-
-    // Processes "tag" tags in the feed.
-    private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException
-    {System.out.println("testing");
-        parser.require(XmlPullParser.START_TAG, ns, "tag");
-        System.out.println("I'm going to read the text");
-        String tag = readText(parser);
-        System.out.println("The tag number is!!!!!!!!!:" + tag);
-        parser.require(XmlPullParser.END_TAG, ns, "tag");
-        return tag;
-    }
-
-    // Processes "title" tags in the feed.
-    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException
-    {
-        parser.require(XmlPullParser.START_TAG, ns, "title");
-        String tag = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "title");
-        return tag;
-    }
-
-    // For the tags "tag" and "title", extracts their text values.
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
-    { System.out.println("I'm going to read text");
-        String result = "";
-        if (parser.next() == XmlPullParser.TEXT)
-        {
-            result = parser.getText();
-            parser.nextTag();
-        }
-        return result;
     }
 
     //Skip tags we don't care about
