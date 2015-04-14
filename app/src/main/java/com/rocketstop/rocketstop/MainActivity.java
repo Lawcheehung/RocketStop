@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity
                         for (int i = 0; i < routesList.size(); i++)
                         {
                             XmlParserRouteList.Route value = routesList.get(i);
-                            System.out.println("Route: " + value);
+                            System.out.println("Route: " + value.routeNumber + " " +  value.routeName);
                         }
 
                     }
