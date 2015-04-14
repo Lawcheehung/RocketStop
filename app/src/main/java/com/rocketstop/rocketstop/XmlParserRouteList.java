@@ -38,8 +38,8 @@ public class XmlParserRouteList
         try
         {
             XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);    //Use this call to change the general behaviour of the parser, such as namespace processing or doctype declaration handling.
+            parser.setInput(in, null);   //Sets the input stream the parser is going to process.
             parser.nextTag();
             return readFeed(parser); //Call readFeed to do processing
         }

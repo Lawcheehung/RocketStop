@@ -1,5 +1,7 @@
 package com.rocketstop.rocketstop;
 
+import android.graphics.*;
+import android.graphics.Path;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,6 +28,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc
+//http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5
 
         Thread thread = new Thread(new Runnable()
         {
@@ -34,8 +38,40 @@ public class MainActivity extends ActionBarActivity
             {
                 try
                 {
-                    XmlParserRouteList abc = new XmlParserRouteList();
+                    XmlParserRouteConfig abc = new XmlParserRouteConfig();
 
+                    InputStream input;
+                    try
+                    {
+                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5");
+                        URLConnection urlConnection = url.openConnection();
+                        input = new BufferedInputStream(urlConnection.getInputStream());
+                        List<Directions> DirectionsList;
+                        System.out.println("parse now");
+                        DirectionsList = abc.routeParser(input);
+
+/*
+                        //print out the route list
+                        for (int i = 0; i < DirectionsList.size(); i++)
+                        {
+                           String value = DirectionsList.get(i);
+                            System.out.println("Route: " + value.routeNumber + " " + value.routeName);
+                        }*/
+                    }
+                    catch (IOException e1)
+                    {
+                        System.out.println("The URL is not valid.");
+                        System.out.println(e1.getMessage());
+                    }
+                    catch (XmlPullParserException e)
+                    {
+                        System.out.println("xml error");
+                    }
+
+
+
+                    /*
+                    XmlParserRouteList abc = new XmlParserRouteList();
 
                     InputStream input;
                     try
@@ -45,27 +81,26 @@ public class MainActivity extends ActionBarActivity
                         input = new BufferedInputStream(urlConnection.getInputStream());
                         List<XmlParserRouteList.Route> routesList;
 
-
-                        routesList=abc.routeParser(input);
-
+                        routesList = abc.routeParser(input);
 
                         //print out the route list
                         for (int i = 0; i < routesList.size(); i++)
                         {
                             XmlParserRouteList.Route value = routesList.get(i);
-                            System.out.println("Route: " + value.routeNumber + " " +  value.routeName);
+                            System.out.println("Route: " + value.routeNumber + " " + value.routeName);
                         }
-
                     }
                     catch (IOException e1)
                     {
                         System.out.println("The URL is not valid.");
                         System.out.println(e1.getMessage());
                     }
-                  //      catch (XmlPullParserException e)
+                    catch (XmlPullParserException e)
                     {
-                 //       System.out.println("xml error");
-                    }
+                        System.out.println("xml error");
+                    }*/
+
+
                 }
                 catch (Exception e)
                 {
