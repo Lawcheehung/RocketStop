@@ -58,6 +58,7 @@ public class XmlParserRouteList
         String title = null;
         Route route = new Route(tag, title);
 
+
         parser.require(XmlPullParser.START_TAG, ns, "body");
         while (parser.next() != XmlPullParser.END_TAG)
         {
