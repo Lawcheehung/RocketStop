@@ -31,8 +31,8 @@ public class XmlParserRouteList
         }
     }
 
-    //Return a List containing our Route objects
     //Adapted from http://developer.android.com/training/basics/network-ops/xml.html
+    //Return a List containing our Route objects
     public List<Route> routeParser(InputStream in) throws XmlPullParserException, IOException
     {
         try
@@ -84,15 +84,13 @@ public class XmlParserRouteList
     }
 
 
-    // Processes link tags in the feed.
+    // Processes the route tag for "tag" and "title"
     private Route readRoute(XmlPullParser parser) throws IOException, XmlPullParserException
     {
         parser.require(XmlPullParser.START_TAG, ns, "route");
-        String routeTag = "";
-        String routeTitle = "";
         //String relType = parser.getAttributeValue(null, "tag");
-        routeTag = parser.getAttributeValue(null, "tag");
-        routeTitle = parser.getAttributeValue(null, "title");
+        String routeTag = parser.getAttributeValue(null, "tag");
+        String routeTitle = parser.getAttributeValue(null, "title");
         parser.nextTag();
         //routeTitle = parser.getText();
         Route route = new Route(routeTag, routeTitle);
