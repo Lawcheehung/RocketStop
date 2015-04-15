@@ -15,11 +15,7 @@ import java.util.List;
  * XML Parser for Route List.
  */
 
-
 //Read all the stag tags and store them in a stopLocation list.
-
-//
-
 
 // I didn't get the route info::: <route tag="5" title="5-Avenue Rd" color="ff0000" oppositeColor="ffffff" latMin="43.6564899" latMax="43.7061999" lonMin="-79.40603" lonMax="-79.3867799">
 public class XmlParserRouteConfig
@@ -27,7 +23,7 @@ public class XmlParserRouteConfig
     private static final String ns = null; //No namespaces
 
     //Stop variables
-    List<Stop> stoplocation = new ArrayList<>();
+    List<Stop> stopLocation = new ArrayList<>();
     String stopTag;
     String title;
     String lat;
@@ -79,7 +75,7 @@ public class XmlParserRouteConfig
                     readStop(parser);
 
                     Stop s = new Stop(this.stopTag, this.title, this.lat, this.lon, this.stopID);
-                    stoplocation.add(s);
+                    stopLocation.add(s);
 
                     // System.out.println(this.stopTag + " " + this.title + " " + this.lat + " " + this.lon + " " + this.stopID);
                 }
@@ -112,13 +108,13 @@ public class XmlParserRouteConfig
                     {
                         found = false;
 
-                        for (int j = 0; (j < stoplocation.size()) || (found == false); j++)
+                        for (int j = 0; (j < stopLocation.size()) || (found == false); j++)
                         {
 
-                            if (stopTagList.get(i).equals(stoplocation.get(j).stopRouteNumber))
+                            if (stopTagList.get(i).equals(stopLocation.get(j).stopRouteNumber))
                             {
                                 found = true;
-                                stopList.add(stoplocation.get(j));
+                                stopList.add(stopLocation.get(j));
                             }
                         }
                     }
