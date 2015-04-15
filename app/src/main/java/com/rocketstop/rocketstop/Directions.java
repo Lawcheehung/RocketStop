@@ -18,15 +18,15 @@ public class Directions
     public final String name;
     public final String useForUI;
     public final String branch;
-    List<String> dStops = new ArrayList<>();
+    List<Stop> dStops = new ArrayList<>();
 
-    Directions(String tag, String title, String name, String u, String branch)
+    Directions(String tag, String title, String name, String u, String branch,  List<Stop> s)
     {
         this.directionTag = tag;
         this.title = title;
         this.name = name;
         this.useForUI = u;
         this.branch = branch;
-       // this.dStops = s;
+        this.dStops = s;
     }
 }

@@ -47,16 +47,28 @@ public class MainActivity extends ActionBarActivity
                         URLConnection urlConnection = url.openConnection();
                         input = new BufferedInputStream(urlConnection.getInputStream());
                         List<Directions> DirectionsList;
-                        System.out.println("parse now");
                         DirectionsList = abc.routeParser(input);
 
-/*
-                        //print out the route list
+
+                        //print out the directions list
                         for (int i = 0; i < DirectionsList.size(); i++)
-                        {
-                           String value = DirectionsList.get(i);
-                            System.out.println("Route: " + value.routeNumber + " " + value.routeName);
-                        }*/
+                        { System.out.println("////////////////////////////////////////////////////////////////////////////////////");
+                            Directions value = DirectionsList.get(i);
+                            System.out.println("Direction: " + value.directionTag+ " " + value.name+ " " + value.title
+                                    + " " + value.name
+                                    + " " + value.useForUI
+                                    + " " + value.branch);
+
+                            for (int j = 0; j < value.dStops.size(); j++)
+                            {
+                                Stop oneStop = value.dStops.get(j);
+                                System.out.println("Stop Location: " + oneStop.stopRouteNumber + " " + oneStop.stopRouteName
+                                        + " " + oneStop.stopLat + " " + oneStop.stopLong + " " + oneStop.stopID);
+                            }
+
+
+
+                        }
                     }
                     catch (IOException e1)
                     {

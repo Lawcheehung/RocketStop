@@ -1,8 +1,6 @@
 package com.rocketstop.rocketstop;
 
 import android.content.res.XmlResourceParser;
-import android.graphics.*;
-import android.graphics.Path;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -21,7 +19,6 @@ import java.util.List;
 //Read all the stag tags and store them in a stopLocation list.
 
 //
-
 
 
 // I didn't get the route info::: <route tag="5" title="5-Avenue Rd" color="ff0000" oppositeColor="ffffff" latMin="43.6564899" latMax="43.7061999" lonMin="-79.40603" lonMax="-79.3867799">
@@ -46,7 +43,7 @@ public class XmlParserRouteConfig
     String dName = null;
     String useForUI = null;
     String branch = null;
-    List<String> stopList = new ArrayList<>();
+    List<Stop> stopList = new ArrayList<>();
     //-----------------------------------------
     List<String> stopTagList = new ArrayList<>();
 
@@ -68,18 +65,12 @@ public class XmlParserRouteConfig
 
     private List<Directions> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
     {
-        String name="ignore points for now!!!";
+        String name = "ignore points for now!!!";
         parser.require(XmlPullParser.START_TAG, ns, "body");      //exception is thrown if the test fails
 
-        while ((parser.getEventType() != XmlResourceParser.END_DOCUMENT)&&(!name.equals("point")))
+        while ((parser.getEventType() != XmlResourceParser.END_DOCUMENT) && (!name.equals("point")))
         {
-          //  if (parser.getEventType() != XmlResourceParser.START_TAG)
-          //  {
-          //      continue;
-            //}
-
             name = parser.getName();
-            System.out.println("Name: " + name);
 
             if (parser.getEventType() == XmlResourceParser.START_TAG)        //starting tag
             {
@@ -90,8 +81,7 @@ public class XmlParserRouteConfig
                     Stop s = new Stop(this.stopTag, this.title, this.lat, this.lon, this.stopID);
                     stoplocation.add(s);
 
-                    System.out.println(this.stopTag + " " + this.title + " " + this.lat + " " + this.lon + " " + this.stopID);
-                    //idk yet
+                    // System.out.println(this.stopTag + " " + this.title + " " + this.lat + " " + this.lon + " " + this.stopID);
                 }
 
                 if (name.equals("direction"))
@@ -101,10 +91,8 @@ public class XmlParserRouteConfig
                 }
                 if (name.equals("stop") && getAllStops == true)
                 {
-
-                    String stopTagz = parser.getAttributeValue(null, "tag");
-                    System.out.println(stopTagz);
-                    this.stopTagList.add(stopTagz);
+                    String stopTemp = parser.getAttributeValue(null, "tag");
+                    this.stopTagList.add(stopTemp);
                 }
                 else
                 {
@@ -119,14 +107,41 @@ public class XmlParserRouteConfig
             {
                 if (name.equals("direction"))        //create Direction object
                 {
-                    Directions d = new Directions(this.directionTag, this.dTitle, this.dName, this.useForUI, this.branch );
+                    boolean found;
+                    for (int i = 0; i < stopTagList.size(); i++)
+                    {
+                        found = false;
+
+                        for (int j = 0; (j < stoplocation.size()) || (found == false); j++)
+                        {
+
+                            if (stopTagList.get(i).equals(stoplocation.get(j).stopRouteNumber))
+                            {
+                                found = true;
+                                stopList.add(stoplocation.get(j));
+                            }
+                        }
+                    }
+
+                    Directions d = new Directions(this.directionTag, this.dTitle, this.dName, this.useForUI, this.branch, this.stopList);
                     dir.add(d);
+
+                    /*
                     System.out.println("//////////////////////////////////////////////////////////////////");
-                    System.out.println(this.directionTag + " " +  this.dTitle + " " +  this.dName + " " +  this.useForUI + " " +  this.branch);
+                    System.out.println(this.directionTag + " " + this.dTitle + " " + this.dName + " " + this.useForUI + " " + this.branch);
+                    for (int i = 0; i < stopList.size(); i++)
+                    {
+                        Stop value = stopList.get(i);
+                        System.out.println("Stop Location: " + value.stopRouteNumber + " " + value.stopRouteName
+                                + " " + value.stopLat + " " + value.stopLong + " " + value.stopID);
+                    }
+
+                    */
+                    //empty out the stopList
+                    stopList=new ArrayList<>();
                 }
             }
-
-             parser.nextTag();
+            parser.nextTag();
         }
         return dir;
     }
@@ -155,9 +170,7 @@ public class XmlParserRouteConfig
         this.branch = parser.getAttributeValue(null, "branch");
     }
 
-
     ///////////////////////////////////////////////////////////////////
-
 
     // For the tags "tag" and "title", extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
