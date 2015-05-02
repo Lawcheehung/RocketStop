@@ -33,7 +33,7 @@ import java.util.List;
 /*
 Authority: TTC
 Route:
-Direction
+Direction:
 Stop:
 Time Remaining:
 */
