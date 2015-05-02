@@ -26,9 +26,18 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-//jason's change
+
 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc
 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5
+
+/*
+Authority: TTC
+Route:
+Direction
+Stop:
+Time Remaining:
+*/
+
 public class MainActivity extends Activity
 {
 
@@ -43,10 +52,6 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         spinner = (Spinner) findViewById(R.id.spinnerRoute);
-        //String num[] = {"zero", "one", "two", "three"};
-        // adapter = ArrayAdapter.createFromResource(this, R.array.country_names, android.R.layout.simple_spinner_item);
-
-
 
         Thread thread = new Thread(new Runnable()
         {

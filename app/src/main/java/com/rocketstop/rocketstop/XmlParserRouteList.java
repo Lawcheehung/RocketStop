@@ -24,6 +24,7 @@ public class XmlParserRouteList
         public final String routeNumber;
         public final String routeName;
 
+
         public Route(String routeNumber, String routeName)
         {
             this.routeNumber = routeNumber;
@@ -56,6 +57,7 @@ public class XmlParserRouteList
         List<Route> routes = new ArrayList<>();
         String tag = null;
         String title = null;
+        RouteInfo routeInfoTemp = null;
         Route route = new Route(tag, title);
 
 
