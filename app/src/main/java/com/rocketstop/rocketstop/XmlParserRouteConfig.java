@@ -41,7 +41,7 @@ public class XmlParserRouteConfig
     List<Stop> stopList = new ArrayList<>();
     //-----------------------------------------
     List<String> stopTagList = new ArrayList<>();
-
+//
     public List<Directions> routeParser(InputStream in) throws XmlPullParserException, IOException
     {
         try
