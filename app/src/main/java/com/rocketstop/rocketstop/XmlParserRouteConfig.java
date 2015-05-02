@@ -30,8 +30,8 @@ public class XmlParserRouteConfig
     List<Stop> stoplocation = new ArrayList<>();
     String stopTag;
     String title;
-    String lat;
-    String lon;
+    double lat;
+    double lon;
     String stopID;
     Boolean getAllStops = false;    //Did we get all the stop locations yet?
 
@@ -154,8 +154,8 @@ public class XmlParserRouteConfig
         parser.require(XmlPullParser.START_TAG, ns, "stop");
         this.stopTag = parser.getAttributeValue(null, "tag");
         this.title = parser.getAttributeValue(null, "title");
-        this.lat = parser.getAttributeValue(null, "lat");
-        this.lon = parser.getAttributeValue(null, "lon");
+        this.lat = Double.parseDouble(parser.getAttributeValue(null, "lat"));
+        this.lon = Double.parseDouble(parser.getAttributeValue(null, "lon"));
         this.stopID = parser.getAttributeValue(null, "stopId");
     }
 

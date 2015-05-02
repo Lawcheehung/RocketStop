@@ -6,12 +6,12 @@ public class Stop
 {
     public final String stopRouteNumber;
     public final String stopRouteName;
-    public final String stopLat;
-    public final String stopLong;
+    public final double stopLat;
+    public final double stopLong;
     public final String stopID;
 
     //constructor
-    public Stop(String num, String name, String lat, String lon, String id)
+    public Stop(String num, String name, double lat, double lon, String id)
     {
         stopRouteNumber = num;
         stopRouteName = name;
@@ -19,5 +19,4 @@ public class Stop
         stopLong = lon;
         stopID = id;
     }
-
 }
