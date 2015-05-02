@@ -16,11 +16,6 @@ import java.util.List;
  */
 
 
-//Read all the stag tags and store them in a stopLocation list.
-
-//
-
-
 // I didn't get the route info::: <route tag="5" title="5-Avenue Rd" color="ff0000" oppositeColor="ffffff" latMin="43.6564899" latMax="43.7061999" lonMin="-79.40603" lonMax="-79.3867799">
 public class XmlParserRouteConfig
 {
@@ -86,7 +81,7 @@ public class XmlParserRouteConfig
 
                 if (name.equals("direction"))
                 {
-                    getAllStops = true;      //we read all the stop locations
+                    getAllStops = true;      //we read all the stop locations at the top.
                     readDirection(parser);
                 }
                 if (name.equals("stop") && getAllStops == true)
@@ -114,7 +109,6 @@ public class XmlParserRouteConfig
 
                         for (int j = 0; (j < stoplocation.size()) || (found == false); j++)
                         {
-
                             if (stopTagList.get(i).equals(stoplocation.get(j).stopRouteNumber))
                             {
                                 found = true;
