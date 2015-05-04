@@ -26,6 +26,18 @@ public class XmlParserRouteConfig
 {
     private static final String ns = null; //No namespaces
 
+    //-----------------------------
+    //routeInfo variables
+    List<RouteInfo> routeInfoList = new ArrayList<>();
+    String routeTag;
+    String routeTitle;
+    String routeColor;
+    String routeOppositeColor;
+    double latMin;
+    double latMax;
+    double lonMin;
+    double lonMax;
+    //-----------------------------
     //Stop variables
     List<Stop> stoplocation = new ArrayList<>();
     String stopTag;
@@ -47,7 +59,7 @@ public class XmlParserRouteConfig
     //-----------------------------------------
     List<String> stopTagList = new ArrayList<>();
 
-    public List<Directions> routeParser(InputStream in) throws XmlPullParserException, IOException
+    public void routeParser(InputStream in) throws XmlPullParserException, IOException
     {
         try
         {
@@ -55,7 +67,7 @@ public class XmlParserRouteConfig
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readFeed(parser); //Call readFeed to do processing
+            readFeed(parser); //Call readFeed to do processing
         }
         finally
         {
@@ -63,7 +75,7 @@ public class XmlParserRouteConfig
         }
     }
 
-    private List<Directions> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
+    private void readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
     {
         String name = "ignore points for now!!!";
         parser.require(XmlPullParser.START_TAG, ns, "body");      //exception is thrown if the test fails
@@ -74,6 +86,16 @@ public class XmlParserRouteConfig
 
             if (parser.getEventType() == XmlResourceParser.START_TAG)        //starting tag
             {
+                if (name.equals("route"))
+                {
+                    //get route information
+                    routeInfo(parser);
+
+                    //create the RouteInfo object after we retrieved the list of Directions
+
+                }
+
+
                 if (name.equals("stop") && getAllStops == false)
                 {
                     readStop(parser);
@@ -126,6 +148,8 @@ public class XmlParserRouteConfig
                     Directions d = new Directions(this.directionTag, this.dTitle, this.dName, this.useForUI, this.branch, this.stopList);
                     dir.add(d);
 
+
+
                     /*
                     System.out.println("//////////////////////////////////////////////////////////////////");
                     System.out.println(this.directionTag + " " + this.dTitle + " " + this.dName + " " + this.useForUI + " " + this.branch);
@@ -138,12 +162,17 @@ public class XmlParserRouteConfig
 
                     */
                     //empty out the stopList
-                    stopList=new ArrayList<>();
+                    stopList = new ArrayList<>();
                 }
             }
             parser.nextTag();
         }
-        return dir;
+
+        //Okay, we got retrieved all the Directions for this route. Create a routeinfo list and store it in the routeinfo list.
+        RouteInfo ri = new RouteInfo(this.routeTag, this.routeTitle, this.routeColor, this.routeOppositeColor, this.latMin, this.latMax, this.lonMin, this.lonMax, this.dir);
+        this.routeInfoList.add(ri);
+
+        //return dir;
     }
 
 
@@ -169,6 +198,22 @@ public class XmlParserRouteConfig
         this.useForUI = parser.getAttributeValue(null, "useForUI");
         this.branch = parser.getAttributeValue(null, "branch");
     }
+
+    // Processes attribute values within the tag.
+    private void routeInfo(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        parser.require(XmlPullParser.START_TAG, ns, "route");
+        this.routeTag = parser.getAttributeValue(null, "tag");
+        this.routeTitle = parser.getAttributeValue(null, "title");
+        this.routeColor = parser.getAttributeValue(null, "color");
+        this.routeOppositeColor = parser.getAttributeValue(null, "oppositeColor");
+
+        this.latMin = Double.parseDouble(parser.getAttributeValue(null, "latMin"));
+        this.latMax = Double.parseDouble(parser.getAttributeValue(null, "latMax"));
+        this.lonMin = Double.parseDouble(parser.getAttributeValue(null, "lonMin"));
+        this.lonMax = Double.parseDouble(parser.getAttributeValue(null, "lonMax"));
+    }
+
 
     ///////////////////////////////////////////////////////////////////
 

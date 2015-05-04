@@ -5,8 +5,11 @@ import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class XmlParserRouteList
 {
     private static final String ns = null; //No namespaces
+    private int indexNum=0;  //the index number of the route list
 
     //A Route object consists of a routeNumber & routeName
     //i.e. routeNumber = 5, routeName = 5-Avenue Rd
@@ -23,12 +27,13 @@ public class XmlParserRouteList
     {
         public final String routeNumber;
         public final String routeName;
+        public int num;
 
-
-        public Route(String routeNumber, String routeName)
+        public Route(String routeNumber, String routeName,  int num)
         {
             this.routeNumber = routeNumber;
             this.routeName = routeName;
+            this.num =   num;
         }
     }
 
@@ -57,8 +62,8 @@ public class XmlParserRouteList
         List<Route> routes = new ArrayList<>();
         String tag = null;
         String title = null;
-        RouteInfo routeInfoTemp = null;
-        Route route = new Route(tag, title);
+       int num = 0;
+        Route route = new Route(tag, title,num);
 
 
         parser.require(XmlPullParser.START_TAG, ns, "body");
@@ -81,6 +86,28 @@ public class XmlParserRouteList
             }
 
             routes.add(route);
+
+        //get routeInfo
+            InputStream input;
+
+            try
+            {
+                URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5");
+                URLConnection urlConnection = url.openConnection();
+                input = new BufferedInputStream(urlConnection.getInputStream());
+
+            }
+            catch (IOException e1)
+            {
+                System.out.println("The URL is not valid.");
+                System.out.println(e1.getMessage());
+            }
+
+
+
+
+
+
         }
         return routes;
     }
@@ -90,12 +117,13 @@ public class XmlParserRouteList
     private Route readRoute(XmlPullParser parser) throws IOException, XmlPullParserException
     {
         parser.require(XmlPullParser.START_TAG, ns, "route");
-        //String relType = parser.getAttributeValue(null, "tag");
+
         String routeTag = parser.getAttributeValue(null, "tag");
         String routeTitle = parser.getAttributeValue(null, "title");
         parser.nextTag();
-        //routeTitle = parser.getText();
-        Route route = new Route(routeTag, routeTitle);
+
+        Route route = new Route(routeTag, routeTitle,this.indexNum);
+        this.indexNum++;
         return route;
     }
 
