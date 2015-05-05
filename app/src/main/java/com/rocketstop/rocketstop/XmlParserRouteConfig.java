@@ -28,7 +28,7 @@ public class XmlParserRouteConfig
 
     //-----------------------------
     //routeInfo variables
-    List<RouteInfo> routeInfoList = new ArrayList<>();
+   RouteInfo routeInfoList ;
     String routeTag;
     String routeTitle;
     String routeColor;
@@ -59,7 +59,9 @@ public class XmlParserRouteConfig
     //-----------------------------------------
     List<String> stopTagList = new ArrayList<>();
 
-    public void routeParser(InputStream in) throws XmlPullParserException, IOException
+
+
+    public RouteInfo routeParser(InputStream in) throws XmlPullParserException, IOException
     {
         try
         {
@@ -67,7 +69,7 @@ public class XmlParserRouteConfig
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            readFeed(parser); //Call readFeed to do processing
+            return readFeed(parser); //Call readFeed to do processing
         }
         finally
         {
@@ -75,7 +77,7 @@ public class XmlParserRouteConfig
         }
     }
 
-    private void readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
+    private RouteInfo readFeed(XmlPullParser parser) throws XmlPullParserException, IOException
     {
         String name = "ignore points for now!!!";
         parser.require(XmlPullParser.START_TAG, ns, "body");      //exception is thrown if the test fails
@@ -169,10 +171,19 @@ public class XmlParserRouteConfig
         }
 
         //Okay, we got retrieved all the Directions for this route. Create a routeinfo list and store it in the routeinfo list.
-        RouteInfo ri = new RouteInfo(this.routeTag, this.routeTitle, this.routeColor, this.routeOppositeColor, this.latMin, this.latMax, this.lonMin, this.lonMax, this.dir);
-        this.routeInfoList.add(ri);
+        routeInfoList = new RouteInfo(this.routeTag, this.routeTitle, this.routeColor, this.routeOppositeColor, this.latMin, this.latMax, this.lonMin, this.lonMax, this.dir);
 
-        //return dir;
+
+
+//        for (int i = 0; i < routeInfoList.size(); i++)
+//        {
+//            RouteInfo value = routeInfoList.get(i);
+//            System.out.println("Stop Location: " + value.routeTitle);
+//        }
+
+
+
+        return routeInfoList;
     }
 
 

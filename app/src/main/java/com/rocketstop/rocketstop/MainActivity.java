@@ -40,18 +40,18 @@ Time Remaining:
 
 public class MainActivity extends Activity
 {
-
     Spinner spinner;
     ArrayAdapter<String> adapter;
     List<String> routeNames = new ArrayList<>();
-    List<XmlParserRouteList.Route> routesList= new ArrayList<>();
+    boolean done = false;
+    List<RouteInfo> transitList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        spinner = (Spinner) findViewById(R.id.spinnerRoute);
 
         Thread thread = new Thread(new Runnable()
         {
@@ -109,22 +109,17 @@ public class MainActivity extends Activity
                         input = new BufferedInputStream(urlConnection.getInputStream());
 
 
-                        routesList = abc.routeParser(input);
+                        transitList = abc.routeParser(input);
 
                         //print out the route list
-                        for (int i = 0; i < routesList.size(); i++)
+                        for (int i = 0; i < transitList.size(); i++)
                         {
-                            XmlParserRouteList.Route value = routesList.get(i);
-                            System.out.println("Route: " + value.routeNumber + " " + value.routeName);
+                            String value = transitList.get(i).routeTitle;
+                            routeNames.add(value);
                         }
 
-                        //create an array list with only route names.
-                        for (int i = 0; i < routesList.size(); i++)
-                        {
-                            String name = routesList.get(i).routeName;
-                            routeNames.add(name);
-                        }
 
+                        done = true;
                     }
                     catch (IOException e1)
                     {
@@ -146,9 +141,19 @@ public class MainActivity extends Activity
         });
 
         thread.start();
-
-
-
+        while (done == false)
+        {
+            try
+            {
+                Thread.sleep(1500);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Weird...");
+        spinner = (Spinner) findViewById(R.id.spinnerRoute);
         //Set up adapter.
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, routeNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -169,6 +174,7 @@ public class MainActivity extends Activity
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
