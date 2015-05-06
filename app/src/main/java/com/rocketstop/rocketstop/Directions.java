@@ -29,4 +29,10 @@ public class Directions
         this.branch = branch;
         this.dStops = s;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.title;
+    }
 }

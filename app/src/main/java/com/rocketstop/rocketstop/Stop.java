@@ -19,4 +19,10 @@ public class Stop
         stopLong = lon;
         stopID = id;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.stopRouteName;
+    }
 }

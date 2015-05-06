@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:paddingLeft="16dp"
@@ -12,14 +12,59 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Routes:"
-        android:layout_marginTop="30dp"
-        android:id="@+id/textView"/>
+        android:layout_marginTop="60dp"
+        android:id="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="32dp"
+        android:layout_alignParentTop="true"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Directions: "
+        android:id="@+id/textView2"
+        android:layout_below="@+id/spinnerRoutes"
+        android:layout_toLeftOf="@+id/spinnerRoutes"
+        android:layout_toStartOf="@+id/spinnerRoutes"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Stops:"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/spinnerDirections"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2"/>
+
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:id="@+id/spinnerRoute"/>
+        android:id="@+id/spinnerRoutes"
+        android:layout_alignTop="@+id/textView"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerDirections"
+        android:layout_below="@+id/spinnerRoutes"
+        android:layout_alignLeft="@+id/spinnerRoutes"
+        android:layout_alignStart="@+id/spinnerRoutes"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerStops"
+        android:layout_below="@+id/spinnerDirections"
+        android:layout_alignRight="@+id/spinnerDirections"
+        android:layout_alignEnd="@+id/spinnerDirections"
+        android:layout_alignLeft="@+id/spinnerDirections"
+        android:layout_alignStart="@+id/spinnerDirections"/>
 
 
-</LinearLayout>
+</RelativeLayout>

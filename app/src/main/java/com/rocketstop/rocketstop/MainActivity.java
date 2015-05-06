@@ -40,11 +40,24 @@ Time Remaining:
 
 public class MainActivity extends Activity
 {
-    Spinner spinner;
-    ArrayAdapter<String> adapter;
+    Spinner spinnerRoutes;
+    Spinner spinnerDirections;
+    Spinner spinnerStops;
+    String routeSelected;
+    int routeSelectedPosition;
+    String directionSelected;
+    int directionSelectedPosition;
+    String stopSelected;
+    int stopSelectedPosition;
+
+    ArrayAdapter adapterDirections;
+    ArrayAdapter adapterRoutes;
+    ArrayAdapter adapterStops;
+
+
     List<String> routeNames = new ArrayList<>();
     boolean done = false;
-    List<RouteInfo> transitList = new ArrayList<>();
+    List<RouteInfo> routeConfig = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,15 +122,15 @@ public class MainActivity extends Activity
                         input = new BufferedInputStream(urlConnection.getInputStream());
 
 
-                        transitList = abc.routeParser(input);
+                        routeConfig = abc.routeParser(input);
 
                         //print out the route list
-                        for (int i = 0; i < transitList.size(); i++)
+                        for (int i = 0; i < routeConfig.size(); i++)
                         {
-                            String value = transitList.get(i).routeTitle;
+                            String value = routeConfig.get(i).routeTitle;
+                            System.out.println(value);
                             routeNames.add(value);
                         }
-
 
                         done = true;
                     }
@@ -140,6 +153,11 @@ public class MainActivity extends Activity
             }
         });
 
+
+        ///////////////////////////////////////////////////
+
+
+//Use this while loop for now. I need to learn about Asynctask.
         thread.start();
         while (done == false)
         {
@@ -152,13 +170,83 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
         }
-        System.out.println("Weird...");
-        spinner = (Spinner) findViewById(R.id.spinnerRoute);
+
+        spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
+        spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
+        spinnerStops = (Spinner) findViewById(R.id.spinnerStops);
+
+////////////////////////////////////////////////
+
         //Set up adapter.
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, routeNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        adapterRoutes = new ArrayAdapter(this, android.R.layout.simple_list_item_1, routeNames);
+        adapterRoutes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRoutes.setAdapter(adapterRoutes);
+        spinnerRoutes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected", Toast.LENGTH_LONG).show();
+                System.out.println(parent.getItemAtPosition(position).toString() + " selected!!!!!!!!!!!!!!!!!!");
+                routeSelected = parent.getItemAtPosition(position).toString();
+                routeSelectedPosition = position;
+                updateDirection();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+//////////////////////////////////////////////
+
+
+    }
+
+    public void updateDirection()
+    {
+        //get the list of directions for the selected route
+        List directionNames = routeConfig.get(routeSelectedPosition).listOfDirections;
+
+
+        //Set up adapter.
+        adapterDirections = new ArrayAdapter(this, android.R.layout.simple_list_item_1, directionNames);
+        adapterDirections.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDirections.setAdapter(adapterDirections);
+        spinnerDirections.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected", Toast.LENGTH_LONG).show();
+                System.out.println(parent.getItemAtPosition(position) + " selected!!!!!!!!!!!!!!!!!!");
+                directionSelected = parent.getItemAtPosition(position).toString();
+                directionSelectedPosition = position;
+                updateStop();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+    }
+
+
+    public void updateStop()
+    {
+
+
+        List stopNames = routeConfig.get(routeSelectedPosition).listOfDirections.get(directionSelectedPosition).dStops;
+
+
+        //Set up adapter.
+        adapterStops = new ArrayAdapter(this, android.R.layout.simple_list_item_1, stopNames);
+        adapterStops.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStops.setAdapter(adapterStops);
+        spinnerStops.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -198,5 +286,21 @@ public class MainActivity extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private static long back_pressed;
+
+    public void onBackPressed()
+    {
+        if (back_pressed + 2000 > System.currentTimeMillis())
+        {
+            super.onBackPressed();
+        }
+        else
+        {
+            Toast.makeText(getBaseContext(), "Press back again to exit!!!", Toast.LENGTH_SHORT).show();
+            back_pressed = System.currentTimeMillis();
+        }
+
     }
 }
