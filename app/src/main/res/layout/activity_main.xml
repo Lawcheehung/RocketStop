@@ -4,7 +4,8 @@
               android:layout_height="match_parent"
               android:paddingLeft="16dp"
               android:paddingRight="16dp"
-              android:orientation="horizontal" >
+              android:orientation="horizontal"
+              android:background="#7e7c7d">
 
 
     <TextView
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Routes:"
+        android:textColor="#000000"
         android:layout_marginTop="60dp"
         android:id="@+id/textView"
         android:layout_alignParentLeft="true"
@@ -24,6 +26,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Directions: "
+        android:textColor="#000000"
         android:id="@+id/textView2"
         android:layout_below="@+id/spinnerRoutes"
         android:layout_toLeftOf="@+id/spinnerRoutes"
@@ -34,6 +37,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Stops:"
+        android:textColor="#000000"
         android:id="@+id/textView3"
         android:layout_below="@+id/spinnerDirections"
         android:layout_alignRight="@+id/textView2"
@@ -52,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinnerDirections"
-        android:layout_below="@+id/spinnerRoutes"
+       android:layout_below="@+id/spinnerRoutes"
         android:layout_alignLeft="@+id/spinnerRoutes"
         android:layout_alignStart="@+id/spinnerRoutes"/>
 
@@ -65,6 +69,29 @@
         android:layout_alignEnd="@+id/spinnerDirections"
         android:layout_alignLeft="@+id/spinnerDirections"
         android:layout_alignStart="@+id/spinnerDirections"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Time Remaining:"
+        android:id="@+id/textViewTime"
+        android:textColor="#000000"
+        android:layout_below="@+id/spinnerStops"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/textViewTimeRemaining"
+        android:textColor="#000000"
+        android:layout_alignTop="@+id/textViewTime"
+        android:layout_toRightOf="@+id/textViewTime"
+        android:layout_alignRight="@+id/spinnerStops"
+        android:layout_alignEnd="@+id/spinnerStops"/>
 
 
 </RelativeLayout>

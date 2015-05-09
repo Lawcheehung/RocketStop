@@ -20,15 +20,15 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//http://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc
-//http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5
+//http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=1S
+//http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=1S&s=9590
 
 /*
 Authority: TTC
@@ -54,7 +54,6 @@ public class MainActivity extends Activity
     ArrayAdapter adapterRoutes;
     ArrayAdapter adapterStops;
 
-
     List<String> routeNames = new ArrayList<>();
     boolean done = false;
     List<RouteInfo> routeConfig = new ArrayList<>();
@@ -65,7 +64,6 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Thread thread = new Thread(new Runnable()
         {
             @Override
@@ -73,45 +71,6 @@ public class MainActivity extends Activity
             {
                 try
                 {
-              /*       XmlParserRouteConfig abc = new XmlParserRouteConfig();
-
-                    InputStream input;
-                    try
-                    {
-                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=5");
-                        URLConnection urlConnection = url.openConnection();
-                        input = new BufferedInputStream(urlConnection.getInputStream());
-                        List<Directions> DirectionsList;
-                        DirectionsList = abc.routeParser(input);
-
-
-                        //print out the directions list
-                        for (int i = 0; i < DirectionsList.size(); i++)
-                        { System.out.println("////////////////////////////////////////////////////////////////////////////////////");
-                            Directions value = DirectionsList.get(i);
-                            System.out.println("Direction: " + value.directionTag+ " " + value.name+ " " + value.title
-                                    + " " + value.name
-                                    + " " + value.useForUI
-                                    + " " + value.branch);
-
-                            for (int j = 0; j < value.dStops.size(); j++)
-                            {
-                                Stop oneStop = value.dStops.get(j);
-                                System.out.println("Stop Location: " + oneStop.stopRouteNumber + " " + oneStop.stopRouteName
-                                        + " " + oneStop.stopLat + " " + oneStop.stopLong + " " + oneStop.stopID);
-                            }
-                        }
-                    }
-                    catch (IOException e1)
-                    {
-                        System.out.println("The URL is not valid.");
-                        System.out.println(e1.getMessage());
-                    }
-                    catch (XmlPullParserException e)
-                    {
-                        System.out.println("xml error");
-                    }
-*/
                     XmlParserRouteList abc = new XmlParserRouteList();
 
                     InputStream input;
@@ -120,7 +79,6 @@ public class MainActivity extends Activity
                         URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
                         URLConnection urlConnection = url.openConnection();
                         input = new BufferedInputStream(urlConnection.getInputStream());
-
 
                         routeConfig = abc.routeParser(input);
 
@@ -143,8 +101,6 @@ public class MainActivity extends Activity
                     {
                         System.out.println("xml error");
                     }
-
-
                 }
                 catch (Exception e)
                 {
@@ -152,9 +108,6 @@ public class MainActivity extends Activity
                 }
             }
         });
-
-
-        ///////////////////////////////////////////////////
 
 
 //Use this while loop for now. I need to learn about Asynctask.
@@ -174,8 +127,6 @@ public class MainActivity extends Activity
         spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
         spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
         spinnerStops = (Spinner) findViewById(R.id.spinnerStops);
-
-////////////////////////////////////////////////
 
         //Set up adapter.
         adapterRoutes = new ArrayAdapter(this, android.R.layout.simple_list_item_1, routeNames);
@@ -199,16 +150,13 @@ public class MainActivity extends Activity
 
             }
         });
-//////////////////////////////////////////////
-
-
     }
+
 
     public void updateDirection()
     {
         //get the list of directions for the selected route
         List directionNames = routeConfig.get(routeSelectedPosition).listOfDirections;
-
 
         //Set up adapter.
         adapterDirections = new ArrayAdapter(this, android.R.layout.simple_list_item_1, directionNames);
@@ -237,10 +185,7 @@ public class MainActivity extends Activity
 
     public void updateStop()
     {
-
-
         List stopNames = routeConfig.get(routeSelectedPosition).listOfDirections.get(directionSelectedPosition).dStops;
-
 
         //Set up adapter.
         adapterStops = new ArrayAdapter(this, android.R.layout.simple_list_item_1, stopNames);
@@ -272,6 +217,7 @@ public class MainActivity extends Activity
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -288,6 +234,7 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+
     private static long back_pressed;
 
     public void onBackPressed()
@@ -301,6 +248,5 @@ public class MainActivity extends Activity
             Toast.makeText(getBaseContext(), "Press back again to exit!!!", Toast.LENGTH_SHORT).show();
             back_pressed = System.currentTimeMillis();
         }
-
     }
 }
