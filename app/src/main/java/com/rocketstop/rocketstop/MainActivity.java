@@ -23,12 +23,20 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //http://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
-//http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc
+
+//Route list:
+// http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc
+
+//Route config:
 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=ttc&r=1S
+
+//Predictions:
 //http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=1S&s=9590
+
 
 /*
 Authority: TTC
@@ -44,6 +52,7 @@ public class MainActivity extends Activity
     Spinner spinnerDirections;
     Spinner spinnerStops;
     String routeSelected;
+    TextView textViewTime;
     int routeSelectedPosition;
     String directionSelected;
     int directionSelectedPosition;
@@ -86,7 +95,7 @@ public class MainActivity extends Activity
                         for (int i = 0; i < routeConfig.size(); i++)
                         {
                             String value = routeConfig.get(i).routeTitle;
-                            System.out.println(value);
+                            //System.out.println(value);
                             routeNames.add(value);
                         }
 
@@ -116,7 +125,7 @@ public class MainActivity extends Activity
         {
             try
             {
-                Thread.sleep(1500);
+                Thread.sleep(1);
             }
             catch (InterruptedException e)
             {
@@ -127,6 +136,7 @@ public class MainActivity extends Activity
         spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
         spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
         spinnerStops = (Spinner) findViewById(R.id.spinnerStops);
+        textViewTime = (TextView) findViewById(R.id.textViewTime);
 
         //Set up adapter.
         adapterRoutes = new ArrayAdapter(this, android.R.layout.simple_list_item_1, routeNames);
@@ -138,7 +148,6 @@ public class MainActivity extends Activity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected", Toast.LENGTH_LONG).show();
-                System.out.println(parent.getItemAtPosition(position).toString() + " selected!!!!!!!!!!!!!!!!!!");
                 routeSelected = parent.getItemAtPosition(position).toString();
                 routeSelectedPosition = position;
                 updateDirection();
@@ -168,7 +177,6 @@ public class MainActivity extends Activity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected", Toast.LENGTH_LONG).show();
-                System.out.println(parent.getItemAtPosition(position) + " selected!!!!!!!!!!!!!!!!!!");
                 directionSelected = parent.getItemAtPosition(position).toString();
                 directionSelectedPosition = position;
                 updateStop();
@@ -197,7 +205,9 @@ public class MainActivity extends Activity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected", Toast.LENGTH_LONG).show();
-                System.out.println(parent.getItemAtPosition(position) + " selected!!!!!!!!!!!!!!!!!!");
+                stopSelected = parent.getItemAtPosition(position).toString();
+                stopSelectedPosition = position;
+                updateTime();
             }
 
             @Override
@@ -208,6 +218,102 @@ public class MainActivity extends Activity
         });
     }
 
+    long diffMinutes;
+    long diffHours;
+    long diffSeconds;
+    long diffDays;
+    boolean done2 = false;
+    boolean no = false;
+
+    public void updateTime()
+    {
+        final String routeTagg = routeConfig.get(routeSelectedPosition).routeTag;
+        final String stopTagNumber = routeConfig.get(routeSelectedPosition).listOfDirections.get(directionSelectedPosition).dStops.get(stopSelectedPosition).stopRouteNumber;
+
+
+        Thread thread2 = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    XmlParserPrediction abc = new XmlParserPrediction();
+
+                    InputStream input;
+                    try
+                    {
+
+                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=" + routeTagg + "&s=" + stopTagNumber);
+                        URLConnection urlConnection = url.openConnection();
+                        input = new BufferedInputStream(urlConnection.getInputStream());
+
+
+                        Long time = abc.routeParser(input);
+
+
+                        if (time > -1)
+                        {
+                            System.out.println("time!!!!!!!!!!!!!!!!! " + time);
+                            Date currentTime = new Date();
+                            Date predictionTime = new Date(time * 1000);
+
+                            long diff = predictionTime.getTime() - currentTime.getTime();
+
+                            diffSeconds = diff / 1000 % 60;
+                            diffMinutes = diff / (60 * 1000) % 60;
+                            diffHours = diff / (60 * 60 * 1000) % 24;
+                            diffDays = diff / (24 * 60 * 60 * 1000);
+                            System.out.println(diffHours + "hours, " + diffMinutes + "minutes, " + diffSeconds + "seconds.");
+                            no = false;
+
+                        }
+                        else
+                        {
+                            no = true;
+                        }
+
+                        done = true;
+                    }
+                    catch (IOException e1)
+                    {
+                        System.out.println("The URL is not valid.");
+                        System.out.println(e1.getMessage());
+                    }
+                    catch (XmlPullParserException e)
+                    {
+                        System.out.println("xml error");
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+        thread2.start();
+        while (done2 == false)
+        {
+            try
+            {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        if (no == false)
+        {
+            textViewTime.setText(diffHours + "hours, " + diffMinutes + "minutes, " + diffSeconds + "seconds.");
+        }
+        else
+        {
+            textViewTime.setText("no bus available at this time");
+            no=false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
