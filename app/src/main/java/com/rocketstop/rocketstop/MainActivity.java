@@ -316,7 +316,7 @@ public class MainActivity extends Activity
 
         if (no == false)
         {
-            textViewTimeRemaining.setText( minTime + "minutes, " +  secTime+ "seconds.");
+            textViewTimeRemaining.setText( minTime + "minutes = " +  secTime+ "seconds.");
         }
         else
         {
