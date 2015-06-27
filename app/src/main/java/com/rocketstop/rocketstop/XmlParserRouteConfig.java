@@ -94,7 +94,6 @@ public class XmlParserRouteConfig
                     routeInfo(parser);
 
                     //create the RouteInfo object after we retrieved the list of Directions
-
                 }
 
 

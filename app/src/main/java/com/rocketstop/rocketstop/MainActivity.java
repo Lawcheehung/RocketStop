@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 //http://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
 
@@ -36,7 +37,7 @@ import java.util.List;
 
 //Predictions:
 //http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=1S&s=9590
-
+//http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=5&s=14189
 
 /*
 Authority: TTC
@@ -103,12 +104,12 @@ public class MainActivity extends Activity
                     }
                     catch (IOException e1)
                     {
-                        System.out.println("The URL is not valid.");
+                        System.out.println("The URL is not valid.1");
                         System.out.println(e1.getMessage());
                     }
                     catch (XmlPullParserException e)
                     {
-                        System.out.println("xml error");
+                        System.out.println("xml error1");
                     }
                 }
                 catch (Exception e)
@@ -120,18 +121,28 @@ public class MainActivity extends Activity
 
 
 //Use this while loop for now. I need to learn about Asynctask.
-        thread.start();
-        while (done == false)
+
+
+        if (DetectConnection.checkInternetConnection(this))
         {
-            try
+            thread.start();
+            while (done == false)
             {
-                Thread.sleep(1);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
+                try
+                {
+                    Thread.sleep(1);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
+        else
+        {
+            Toast.makeText(getBaseContext(), "YOU DO NOT HAVE INTERNET CONNECTION!!!", Toast.LENGTH_LONG).show();
+        }
+
 
         spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
         spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
@@ -218,10 +229,8 @@ public class MainActivity extends Activity
         });
     }
 
-    long diffMinutes;
-    long diffHours;
-    long diffSeconds;
-    long diffDays;
+   int minTime;
+    int secTime;
     boolean done2 = false;
     boolean no = false;
 
@@ -243,28 +252,27 @@ public class MainActivity extends Activity
                     InputStream input;
                     try
                     {
-
                         URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=ttc&r=" + routeTagg + "&s=" + stopTagNumber);
                         URLConnection urlConnection = url.openConnection();
                         input = new BufferedInputStream(urlConnection.getInputStream());
 
+                        abc.routeParser(input);
 
-                        Long time = abc.routeParser(input);
-
-
-                        if (time > -1)
+//http://www.mkyong.com/java/how-to-calculate-date-time-difference-in-java/
+                        if (abc.sec > -1)
                         {
-                            System.out.println("time!!!!!!!!!!!!!!!!! " + time);
-                            Date currentTime = new Date();
-                            Date predictionTime = new Date(time * 1000);
-
-                            long diff = predictionTime.getTime() - currentTime.getTime();
-
-                            diffSeconds = diff / 1000 % 60;
-                            diffMinutes = diff / (60 * 1000) % 60;
-                            diffHours = diff / (60 * 60 * 1000) % 24;
-                            diffDays = diff / (24 * 60 * 60 * 1000);
-                            System.out.println(diffHours + "hours, " + diffMinutes + "minutes, " + diffSeconds + "seconds.");
+                            minTime=abc.min;
+                            secTime=abc.sec;
+                            System.out.println("PREDICTION TIME: " + abc.min + ", " + abc.sec);
+//                            Date currentTime = new Date();
+//                            Date predictionTime = new Date(time);
+//                            long diff = predictionTime.getTime() - currentTime.getTime();
+//                            diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+//                            diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+//                            diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+//                            diffDays = TimeUnit.MILLISECONDS.toDays(diff);
+//
+//                            System.out.println(diffHours + "hours, " + diffMinutes + "minutes, " + diffSeconds + "seconds.");
                             no = false;
 
                         }
@@ -272,23 +280,23 @@ public class MainActivity extends Activity
                         {
                             no = true;
                         }
-
-                        done = true;
                     }
                     catch (IOException e1)
                     {
-                        System.out.println("The URL is not valid.");
+                        System.out.println("The URL is not valid.3");
                         System.out.println(e1.getMessage());
                     }
                     catch (XmlPullParserException e)
                     {
-                        System.out.println("xml error");
+                        System.out.println("xml error3");
+                        System.out.println(e.getMessage());
                     }
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
                 }
+                done2 = true;
             }
 
         });
@@ -304,14 +312,16 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
         }
+        TextView textViewTimeRemaining =(TextView) findViewById(R.id.textViewTimeRemaining);
+
         if (no == false)
         {
-            textViewTime.setText(diffHours + "hours, " + diffMinutes + "minutes, " + diffSeconds + "seconds.");
+            textViewTimeRemaining.setText( minTime + "minutes, " +  secTime+ "seconds.");
         }
         else
         {
-            textViewTime.setText("no bus available at this time");
-            no=false;
+            textViewTimeRemaining.setText("no bus available at this time");
+            no = false;
         }
     }
 
