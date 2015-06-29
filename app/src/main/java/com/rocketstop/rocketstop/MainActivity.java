@@ -229,7 +229,7 @@ public class MainActivity extends Activity
         });
     }
 
-   int minTime;
+    int minTime;
     int secTime;
     boolean done2 = false;
     boolean no = false;
@@ -350,7 +350,7 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-
+//This portion of code exits the app when the user press on "back" twice. Cool!!
     private static long back_pressed;
 
     public void onBackPressed()
