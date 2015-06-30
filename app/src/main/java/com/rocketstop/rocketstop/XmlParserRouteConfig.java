@@ -164,6 +164,7 @@ public class XmlParserRouteConfig
                     */
                     //empty out the stopList
                     stopList = new ArrayList<>();
+                    stopTagList= new ArrayList<>();
                 }
             }
             parser.nextTag();
