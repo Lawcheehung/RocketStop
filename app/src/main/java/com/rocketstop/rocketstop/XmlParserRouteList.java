@@ -19,8 +19,10 @@ import java.util.List;
 public class XmlParserRouteList
 {
 
-    List<RouteInfo> list = new ArrayList<>();
 
+//    StedmanSplashPage splash = new StedmanSplashPage();
+    List<RouteInfo> list = new ArrayList<>();
+int counter=0;
 
     private static final String ns = null; //No namespaces
     private int indexNum = 0;  //the index number of the route list
