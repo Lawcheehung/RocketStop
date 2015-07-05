@@ -28,7 +28,7 @@ public class XmlParserRouteConfig
 
     //-----------------------------
     //routeInfo variables
-   RouteInfo routeInfoList ;
+    RouteInfo routeInfoList;
     String routeTag;
     String routeTitle;
     String routeColor;
@@ -58,7 +58,6 @@ public class XmlParserRouteConfig
     List<Stop> stopList = new ArrayList<>();
     //-----------------------------------------
     List<String> stopTagList = new ArrayList<>();
-
 
 
     public RouteInfo routeParser(InputStream in) throws XmlPullParserException, IOException
@@ -130,18 +129,34 @@ public class XmlParserRouteConfig
             {
                 if (name.equals("direction"))        //create Direction object
                 {
-                    boolean found;
+                    boolean found= false;
+                    boolean hello=false;
                     for (int i = 0; i < stopTagList.size(); i++)
                     {
                         found = false;
+                        hello = false;
 
                         for (int j = 0; (j < stoplocation.size()) || (found == false); j++)
                         {
-
                             if (stopTagList.get(i).equals(stoplocation.get(j).stopRouteNumber))
                             {
                                 found = true;
                                 stopList.add(stoplocation.get(j));
+
+                                for (; ((j + 1) < stoplocation.size()) && (i + 1) < stopTagList.size() && hello == false; )
+                                {
+                                    if (stopTagList.get(i + 1).equals(stoplocation.get(j + 1).stopRouteNumber))
+                                    {
+                                        stopList.add(stoplocation.get(j + 1));
+                                        i++;
+                                        j++;
+                                        hello = false;
+                                    }
+                                    else
+                                    {
+                                        hello = true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -164,7 +179,7 @@ public class XmlParserRouteConfig
                     */
                     //empty out the stopList
                     stopList = new ArrayList<>();
-                    stopTagList= new ArrayList<>();
+                    stopTagList = new ArrayList<>();
                 }
             }
             parser.nextTag();
@@ -174,13 +189,11 @@ public class XmlParserRouteConfig
         routeInfoList = new RouteInfo(this.routeTag, this.routeTitle, this.routeColor, this.routeOppositeColor, this.latMin, this.latMax, this.lonMin, this.lonMax, this.dir);
 
 
-
 //        for (int i = 0; i < routeInfoList.size(); i++)
 //        {
 //            RouteInfo value = routeInfoList.get(i);
 //            System.out.println("Stop Location: " + value.routeTitle);
 //        }
-
 
 
         return routeInfoList;

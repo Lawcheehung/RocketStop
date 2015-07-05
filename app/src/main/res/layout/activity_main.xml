@@ -5,7 +5,6 @@
               android:paddingLeft="16dp"
               android:paddingRight="16dp"
               android:orientation="horizontal"
-              android:background="#fff9e3"
               android:clickable="true">
 
 

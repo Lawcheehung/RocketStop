@@ -121,11 +121,11 @@ public class XmlParserRouteList
 
         }
 
-        for (int i = 0; i < list.size(); i++)
-        {
-            RouteInfo value = list.get(i);
-            System.out.println("Stop Location:::: " + value.routeTitle);
-        }
+//        for (int i = 0; i < list.size(); i++)
+//        {
+//            RouteInfo value = list.get(i);
+//            System.out.println("Stop Location:::: " + value.routeTitle);
+//        }
 
         return list;
     }

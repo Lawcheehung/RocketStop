@@ -2,8 +2,10 @@ package com.rocketstop.rocketstop;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Path;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -65,89 +67,125 @@ public class MainActivity extends Activity
     ArrayAdapter adapterStops;
 
     List<String> routeNames = new ArrayList<>();
-    boolean done = false;
     List<RouteInfo> routeConfig = new ArrayList<>();
-
+    StedmanSplashPage f = new StedmanSplashPage();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    XmlParserRouteList abc = new XmlParserRouteList();
-
-                    InputStream input;
-                    try
-                    {
-                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
-                        URLConnection urlConnection = url.openConnection();
-                        input = new BufferedInputStream(urlConnection.getInputStream());
-
-                        routeConfig = abc.routeParser(input);
-
-                        //print out the route list
-                        for (int i = 0; i < routeConfig.size(); i++)
-                        {
-                            String value = routeConfig.get(i).routeTitle;
-                            //System.out.println(value);
-                            routeNames.add(value);
-                        }
-
-                        done = true;
-                    }
-                    catch (IOException e1)
-                    {
-                        System.out.println("The URL is not valid.1");
-                        System.out.println(e1.getMessage());
-                    }
-                    catch (XmlPullParserException e)
-                    {
-                        System.out.println("xml error1");
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+        spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
+        spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
+        spinnerStops = (Spinner) findViewById(R.id.spinnerStops);
+        textViewTime = (TextView) findViewById(R.id.textViewTime);
+        System.out.print("oneeeeeeeeeeeeeeeeeee");
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, StedmanSplashPage.class);
+        startActivity(intent);
 
 
-//Use this while loop for now. I need to learn about Asynctask.
+
+f.returnToMain();
+
 
 
         if (DetectConnection.checkInternetConnection(this))
         {
-            thread.start();
-            while (done == false)
-            {
-                try
-                {
-                    Thread.sleep(1);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
+           // new MyTask().execute();
+
+            //f.returnToMain();
+
+
         }
         else
         {
             Toast.makeText(getBaseContext(), "YOU DO NOT HAVE INTERNET CONNECTION!!!", Toast.LENGTH_LONG).show();
         }
 
+        //Use this while loop for now. I need to learn about Asynctask.
 
-        spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
-        spinnerDirections = (Spinner) findViewById(R.id.spinnerDirections);
-        spinnerStops = (Spinner) findViewById(R.id.spinnerStops);
-        textViewTime = (TextView) findViewById(R.id.textViewTime);
+    }
+
+
+    class MyTask extends AsyncTask<Void, String, Void>
+    {
+
+        //runs on the main thread
+        @Override
+        protected void onPreExecute() //[1]
+        {
+            //assign mainList to adapter. Both are empty list...
+            // adapter = (ArrayAdapter<String>) mainList.getAdapter();
+
+
+        }
+
+        //Runs on the background thread
+        @Override
+        protected Void doInBackground(Void... params)     //[2]
+        {
+            try
+            {
+                XmlParserRouteList abc = new XmlParserRouteList();
+
+                InputStream input;
+                try
+                {
+                    URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
+                    URLConnection urlConnection = url.openConnection();
+                    input = new BufferedInputStream(urlConnection.getInputStream());
+
+                    routeConfig = abc.routeParser(input);
+
+                    //print out the route list
+                    for (int i = 0; i < routeConfig.size(); i++)
+                    {
+                        String value = routeConfig.get(i).routeTitle;
+                        //System.out.println(value);
+                        routeNames.add(value);
+                    }
+                }
+                catch (IOException e1)
+                {
+                    System.out.println("The URL is not valid.1");
+                    System.out.println(e1.getMessage());
+                }
+                catch (XmlPullParserException e)
+                {
+                    System.out.println("xml error1");
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        //update widget in this method
+        //String... values is an array of String objects
+        @Override
+        protected void onProgressUpdate(String... values)   //[4]
+        {
+            //update progress bar
+
+            //adapter.add(values[0]);
+        }
+
+       //All methods below runs on the main thread
+        @Override
+        protected void onPostExecute(Void result)
+        {
+
+
+           f.returnToMain();
+           updateRoute();
+        }
+    }
+
+    public void updateRoute()
+    {
 
         //Set up adapter.
         adapterRoutes = new ArrayAdapter(this, android.R.layout.simple_list_item_1, routeNames);
@@ -172,6 +210,8 @@ public class MainActivity extends Activity
         });
     }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void updateDirection()
     {
@@ -200,7 +240,7 @@ public class MainActivity extends Activity
             }
         });
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void updateStop()
     {
@@ -261,9 +301,9 @@ public class MainActivity extends Activity
 //http://www.mkyong.com/java/how-to-calculate-date-time-difference-in-java/
                         if (abc.sec > -1)
                         {
-                            minTime=abc.min;
-                            secTime=abc.sec;
-                            System.out.println("PREDICTION TIME: " + abc.min + ", " + abc.sec);
+                            minTime = abc.min;
+                            secTime = abc.sec;
+                            // System.out.println("PREDICTION TIME: " + abc.min + ", " + abc.sec);
 //                            Date currentTime = new Date();
 //                            Date predictionTime = new Date(time);
 //                            long diff = predictionTime.getTime() - currentTime.getTime();
@@ -312,11 +352,11 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
         }
-        TextView textViewTimeRemaining =(TextView) findViewById(R.id.textViewTimeRemaining);
+        TextView textViewTimeRemaining = (TextView) findViewById(R.id.textViewTimeRemaining);
 
         if (no == false)
         {
-            textViewTimeRemaining.setText( minTime + "minutes = " +  secTime+ "seconds.");
+            textViewTimeRemaining.setText(minTime + "minutes = " + secTime + "seconds.");
         }
         else
         {
@@ -350,7 +390,7 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-//This portion of code exits the app when the user press on "back" twice. Cool!!
+    //This portion of code exits the app when the user press on "back" twice. Cool!!
     private static long back_pressed;
 
     public void onBackPressed()
