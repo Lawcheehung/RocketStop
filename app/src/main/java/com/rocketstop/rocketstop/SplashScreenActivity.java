@@ -14,7 +14,7 @@ public class SplashScreenActivity extends Activity
 
     private static final int SPLASH_SHOW_TIME = 5000;
     private static final String MYDEBUG = "MYDEBUG";
-
+    //Test
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
