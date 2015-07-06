@@ -19,10 +19,13 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
+
 public class SplashScreenActivity extends Activity
 {
     private static final int SPLASH_SHOW_TIME = 5000;
     private static final String MYDEBUG = "MYDEBUG";
+    private ProgressDialog pd;
 
     static List<RouteInfo> routeConfig = new ArrayList<>();
     static List<String> routeNames = new ArrayList<>();
@@ -57,6 +60,12 @@ public class SplashScreenActivity extends Activity
             //assign mainList to adapter. Both are empty list...
             // adapter = (ArrayAdapter<String>) mainList.getAdapter();
 
+            pd = new ProgressDialog(SplashScreenActivity.this);
+            //pd.setTitle("Processing...");
+            pd.setMessage("Retrieving Routes");
+            pd.setCancelable(false);
+            pd.setIndeterminate(true);
+            pd.show();
 
         }
 
