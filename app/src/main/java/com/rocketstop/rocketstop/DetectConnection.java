@@ -7,10 +7,8 @@ import android.net.ConnectivityManager;
 //Detect if the user's device has wifi access.
 public class DetectConnection
 {
-
     public static boolean checkInternetConnection(Context context)
     {
-
         ConnectivityManager con_manager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 

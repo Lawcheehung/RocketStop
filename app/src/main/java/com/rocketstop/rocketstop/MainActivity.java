@@ -74,74 +74,79 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    XmlParserRouteList abc = new XmlParserRouteList();
 
-                    InputStream input;
-                    try
-                    {
-                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
-                        URLConnection urlConnection = url.openConnection();
-                        input = new BufferedInputStream(urlConnection.getInputStream());
+        routeConfig = new SplashScreenActivity().getRouteConfig();
+        routeNames = new SplashScreenActivity().getRouteNames();
 
-                        routeConfig = abc.routeParser(input);
 
-                        //print out the route list
-                        for (int i = 0; i < routeConfig.size(); i++)
-                        {
-                            String value = routeConfig.get(i).routeTitle;
-                            //System.out.println(value);
-                            routeNames.add(value);
-                        }
-
-                        done = true;
-                    }
-                    catch (IOException e1)
-                    {
-                        System.out.println("The URL is not valid.1");
-                        System.out.println(e1.getMessage());
-                    }
-                    catch (XmlPullParserException e)
-                    {
-                        System.out.println("xml error1");
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+        // Thread thread = new Thread(new Runnable()
+        //  {
+        //   @Override
+        //    public void run()
+        //    {
+//                try
+//                {
+//                    XmlParserRouteList abc = new XmlParserRouteList();
+//
+//                    InputStream input;
+//                    try
+//                    {
+//                        URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
+//                        URLConnection urlConnection = url.openConnection();
+//                        input = new BufferedInputStream(urlConnection.getInputStream());
+//
+//                        routeConfig = abc.routeParser(input);
+//
+//                        //print out the route list
+//                        for (int i = 0; i < routeConfig.size(); i++)
+//                        {
+//                            String value = routeConfig.get(i).routeTitle;
+//                            //System.out.println(value);
+//                            routeNames.add(value);
+//                        }
+//
+//                        done = true;
+//                    }
+//                    catch (IOException e1)
+//                    {
+//                        System.out.println("The URL is not valid.1");
+//                        System.out.println(e1.getMessage());
+//                    }
+//                    catch (XmlPullParserException e)
+//                    {
+//                        System.out.println("xml error1");
+//                    }
+//                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
+        // }
+        // });
 
 
 //Use this while loop for now. I need to learn about Asynctask.
 
 
-        if (DetectConnection.checkInternetConnection(this))
-        {
-            thread.start();
-            while (done == false)
-            {
-                try
-                {
-                    Thread.sleep(1);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-        else
-        {
-            Toast.makeText(getBaseContext(), "YOU DO NOT HAVE INTERNET CONNECTION!!!", Toast.LENGTH_LONG).show();
-        }
+//        if (DetectConnection.checkInternetConnection(this))
+//        {
+//          //  thread.start();
+//          //  while (done == false)
+//          //  {
+//          //      try
+//          //      {
+//          //          Thread.sleep(1);
+//           //     }
+//           //     catch (InterruptedException e)
+//           //     {
+//          //          e.printStackTrace();
+//           //     }
+//        //    }
+//        }
+//        else
+//        {
+//            Toast.makeText(getBaseContext(), "YOU DO NOT HAVE INTERNET CONNECTION!!!", Toast.LENGTH_LONG).show();
+//        }
 
 
         spinnerRoutes = (Spinner) findViewById(R.id.spinnerRoutes);
@@ -261,8 +266,8 @@ public class MainActivity extends Activity
 //http://www.mkyong.com/java/how-to-calculate-date-time-difference-in-java/
                         if (abc.sec > -1)
                         {
-                            minTime=abc.min;
-                            secTime=abc.sec;
+                            minTime = abc.min;
+                            secTime = abc.sec;
                             // System.out.println("PREDICTION TIME: " + abc.min + ", " + abc.sec);
 //                            Date currentTime = new Date();
 //                            Date predictionTime = new Date(time);
@@ -312,11 +317,11 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
         }
-        TextView textViewTimeRemaining =(TextView) findViewById(R.id.textViewTimeRemaining);
+        TextView textViewTimeRemaining = (TextView) findViewById(R.id.textViewTimeRemaining);
 
         if (no == false)
         {
-            textViewTimeRemaining.setText( minTime + "minutes = " +  secTime+ "seconds.");
+            textViewTimeRemaining.setText(minTime + "minutes = " + secTime + "seconds.");
         }
         else
         {

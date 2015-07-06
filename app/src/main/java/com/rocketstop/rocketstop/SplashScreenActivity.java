@@ -9,11 +9,34 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
 public class SplashScreenActivity extends Activity
 {
-
     private static final int SPLASH_SHOW_TIME = 5000;
     private static final String MYDEBUG = "MYDEBUG";
+
+    static List<RouteInfo> routeConfig = new ArrayList<>();
+    static List<String> routeNames = new ArrayList<>();
+
+    public List<String> getRouteNames()
+    {
+        return routeNames;
+    }
+
+    public List<RouteInfo> getRouteConfig()
+    {
+        return routeConfig;
+    }
+
     //Test
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,13 +47,6 @@ public class SplashScreenActivity extends Activity
         new MyTask().execute();
 
     }
-
-    public void returnToMain()
-    {
-        System.out.print("twoooooooooooooooooooooooo");
-        finish();
-    }
-
 
     class MyTask extends AsyncTask<Void, String, Void>
     {
@@ -48,15 +64,55 @@ public class SplashScreenActivity extends Activity
         @Override
         protected Void doInBackground(Void... params)     //[2]
         {
-            try {
-                Thread.sleep(SPLASH_SHOW_TIME);
+//            try
+//            {
+//                Thread.sleep(SPLASH_SHOW_TIME);
+//
+//            }
+//            catch (Exception e)
+//            {
+//                e.printStackTrace();
+//            }
 
-            } catch (Exception e)
+            try
+            {
+                XmlParserRouteList abc = new XmlParserRouteList();
+
+                InputStream input;
+                try
                 {
-                    e.printStackTrace();
+                    URL url = new URL("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=ttc");
+                    URLConnection urlConnection = url.openConnection();
+                    input = new BufferedInputStream(urlConnection.getInputStream());
+
+                    routeConfig = abc.routeParser(input);
+
+                    //print out the route list
+                    for (int i = 0; i < routeConfig.size(); i++)
+                    {
+                        String value = routeConfig.get(i).routeTitle;
+                        //System.out.println(value);
+                        routeNames.add(value);
+                    }
                 }
+                catch (IOException e1)
+                {
+                    System.out.println("The URL is not valid.1");
+                    System.out.println(e1.getMessage());
+                }
+                catch (XmlPullParserException e)
+                {
+                    System.out.println("xml error1");
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
             return null;
         }
+
         //update widget in this method
         //String... values is an array of String objects
         @Override
@@ -69,15 +125,13 @@ public class SplashScreenActivity extends Activity
 
         //All methods below runs on the main thread
         @Override
-        protected void onPostExecute(Void result)
+        protected void onPostExecute(Void result)     //[5]
         {
-            Intent i = new Intent(SplashScreenActivity.this,  MainActivity.class);
+            Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(i);
             finish();
         }
     }
-
-
 
 
     @Override
