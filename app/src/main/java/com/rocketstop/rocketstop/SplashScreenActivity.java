@@ -109,7 +109,6 @@ public class SplashScreenActivity extends Activity
             {
                 e.printStackTrace();
             }
-
             return null;
         }
 
