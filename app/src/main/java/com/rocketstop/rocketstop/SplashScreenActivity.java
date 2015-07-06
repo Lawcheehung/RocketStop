@@ -135,6 +135,7 @@ public class SplashScreenActivity extends Activity
         @Override
         protected void onPostExecute(Void result)     //[5]
         {
+            pd.dismiss();
             Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(i);
             finish();
